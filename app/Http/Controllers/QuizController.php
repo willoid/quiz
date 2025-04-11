@@ -10,6 +10,15 @@ class QuizController extends Controller
 {
     public function quiz(Request $request)
     {
+        $sessionToken = Session::get('session_token');
+
+        if (!$sessionToken) {
+            // Generate a new session token
+            $sessionToken = $this->createSessionToken();
+            // Store the token in the session
+            Session::put('session_token', $sessionToken);
+        }
+
         if (!Session::has('questionNumber')) {
             Session::put('questionNumber', 1);
             Session::put('score', 0);
@@ -26,24 +35,18 @@ class QuizController extends Controller
         }
 
         // Get the next question from the API
-        $response = Http::get("https://opentdb.com/api.php?amount=1&category=12&difficulty=medium&type=multiple");
+        $quizData = $this->fetchQuizQuestions($sessionToken);
 
-        if ($response->successful()) {
-            $quizData = $response->json();
-            return view('quiz', [
-                'data' => $quizData,
-                'questionNumber' => $questionNumber
-            ]);
-        } else {
-            return view('quiz', [
-                'data' => null,
-                'error' => 'Quizfragen konnten nicht abgerufen werden'
-            ]);
-        }
+        return view('quiz', [
+            'data' => $quizData,
+            'questionNumber' => $questionNumber
+        ]);
+
     }
 
     public function submitAnswer(Request $request)
-    { $selected = $request->input('selected_answer');
+    {
+        $selected = $request->input('selected_answer');
         $correct = $request->input('correct_answer');
 
         $isCorrect = $selected === $correct;
@@ -65,5 +68,18 @@ class QuizController extends Controller
             'correctAnswer' => $correct,
             'isLastQuestion' => $isLastQuestion
         ]);
+    }
+
+    private function createSessionToken()
+    {
+        $response = Http::get('https://opentdb.com/api_token.php?command=request');
+        $data = $response->json();
+        return $data['token'] ?? null;
+    }
+
+    private function fetchQuizQuestions($sessionToken)
+    {
+        $response = Http::get("https://opentdb.com/api.php?amount=1&category=12&difficulty=medium&type=multiple&token={$sessionToken}");
+        return $response->json();
     }
 }
