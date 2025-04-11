@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
 
 class QuizController extends Controller
 {
@@ -21,7 +22,7 @@ class QuizController extends Controller
             // Optionally: Reset session for a new game
             Session::forget('questionNumber');
             Session::forget('score');
-            return view('results', ['score' => $score]);
+            return redirect()->route('results')->with('score', $score);
         }
 
         // Get the next question from the API
@@ -43,17 +44,19 @@ class QuizController extends Controller
 
     public function submitAnswer(Request $request)
     {
-        $correct = $request->input('correct'); // true or false from frontend
+        $selected = $request->input('selected_answer');
+        $correct = $request->input('correct_answer');
 
-        if ($correct) {
+        $isCorrect = $selected === $correct;
+
+        if ($isCorrect) {
             $currentScore = Session::get('score', 0);
             Session::put('score', $currentScore + 1);
         }
 
-        // Increment question number
         $questionNumber = Session::get('questionNumber', 1);
         Session::put('questionNumber', $questionNumber + 1);
 
-        return redirect()->route('/'); // Assuming route is named 'quiz'
+        return redirect()->route('quiz');
     }
 }
