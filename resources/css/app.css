@@ -1,4 +1,13 @@
 @import 'partials/header.css';
+@import 'partials/footer.css';
+
+:root {
+    --primary: #d1a1fe;
+    --secondary: #bc13fe;
+    --dark: #4b0082;
+    --black: #1a1a1a;
+    --white:#fff;
+}
 
 * {
     margin: 0;
@@ -8,9 +17,11 @@
 
 /* Body Styling */
 body {
-    background: linear-gradient(to bottom, #4b0082, #1a1a1a); /* Dark purple to near black gradient */
-    color: #fff; /* White text color for contrast */
+    background: linear-gradient(to bottom, var(--dark), var(--black)); /* Dark purple to near black gradient */
+    color: var(--white); /* White text color for contrast */
     font-family: 'Arial', sans-serif; /* Default font */
+    display:flex;
+    flex-direction:column;
     margin: 0;
     padding: 0;
     height: 100vh; /* Full viewport height */

@@ -1,0 +1,16 @@
+footer {
+    padding: 10%;
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+footer p {
+    color:var(--primary);
+    text-align: center;
+}
+footer p a {
+    color:var(--secondary);
+}

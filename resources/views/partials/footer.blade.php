@@ -1,1 +1,1 @@
-<p>made with heart emoji by <a href="link to the repository">willoid</a></p>
+<p>made with &#128156; by <a href="https://github.com/willoid/quiz">willoid</a></p>

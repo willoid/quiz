@@ -8,43 +8,43 @@ header {
     align-items: center;
 }
 .neon-text {
-    color: #fff;
-    text-shadow: 0 0 7px #fff,
-    0 0 10px #fff,
-    0 0 21px #fff,
-    0 0 42px #bc13fe,
-    0 0 82px #bc13fe,
-    0 0 92px #bc13fe,
-    0 0 102px #bc13fe,
-    0 0 151px #bc13fe;
+    color: var(--white);
+    text-shadow: 0 0 7px var(--white),
+    0 0 10px var(--white),
+    0 0 21px var(--white),
+    0 0 42px var(--secondary),
+    0 0 82px var(--secondary),
+    0 0 92px var(--secondary),
+    0 0 102px var(--secondary),
+    0 0 151px var(--secondary);
 }
 h1.neon-text {
     text-align: center;
     font-weight: 400;
     font-size: clamp(40px, 6vw, 70px);
     animation: flicker 1.5s infinite alternate;
-    border: 0.2rem solid #fff;
+    border: 0.2rem solid var(--white);
     border-radius: 2rem;
     padding: 0.4em;
-    box-shadow: 0 0 .2rem #fff,
-    0 0 .2rem #fff,
-    0 0 2rem #bc13fe,
-    0 0 0.8rem #bc13fe,
-    0 0 2.8rem #bc13fe,
-    inset 0 0 1.3rem #bc13fe;
+    box-shadow: 0 0 .2rem var(--white),
+    0 0 .2rem var(--white),
+    0 0 2rem var(--secondary),
+    0 0 0.8rem var(--secondary),
+    0 0 2.8rem var(--secondary),
+    inset 0 0 1.3rem var(--secondary);
 }
 
 @keyframes flicker {
     0%, 18%, 22%, 25%, 53%, 57%, 100% {
         text-shadow:
-            0 0 4px #fff,
-            0 0 11px #fff,
-            0 0 19px #fff,
-            0 0 40px #bc13fe,
-            0 0 80px #bc13fe,
-            0 0 90px #bc13fe,
-            0 0 100px #bc13fe,
-            0 0 150px #bc13fe;
+            0 0 4px var(--white),
+            0 0 11px var(--white),
+            0 0 19px var(--white),
+            0 0 40px var(--secondary),
+            0 0 80px var(--secondary),
+            0 0 90px var(--secondary),
+            0 0 100px var(--secondary),
+            0 0 150px var(--secondary);
     }
     20%, 24%, 55% {
         text-shadow: none;
