@@ -10,45 +10,30 @@ class QuizController extends Controller
 {
     public function quiz(Request $request)
     {
-        $sessionToken = Session::get('session_token');
+        $sessionToken = Session::get('session_token', $this->createSessionToken());
+        Session::put('session_token', $sessionToken);
 
-        if (!$sessionToken) {
-            // Generate a new session token
-            $sessionToken = $this->createSessionToken();
-            // Store the token in the session
-            Session::put('session_token', $sessionToken);
-        }
+        $questionNumber = Session::get('questionNumber', 1);
+        $score = Session::get('score', 0);
 
-        if (!Session::has('questionNumber')) {
-            Session::put('questionNumber', 1);
-            Session::put('score', 0);
-        }
-
-        $questionNumber = Session::get('questionNumber');
-
-        if ($questionNumber > 5) {
-            $score = Session::get('score');
-            // Optionally: Reset session for a new game
-            Session::forget('questionNumber');
-            Session::forget('score');
-            return redirect()->route('results')->with('score', $score);
-        }
-
-        // Get the next question from the API
         $quizData = $this->fetchQuizQuestions($sessionToken);
 
         return view('quiz', [
-            'data' => $quizData,
-            'questionNumber' => $questionNumber
+            'quizData' => $quizData,
+            'questionNumber' => $questionNumber,
+            'score' => $score
         ]);
-
     }
 
     public function submitAnswer(Request $request)
     {
+        $request->validate([
+            'selected_answer' => 'required',
+            'correct_answer' => 'required',
+        ]);
+
         $selected = $request->input('selected_answer');
         $correct = $request->input('correct_answer');
-
         $isCorrect = $selected === $correct;
 
         if ($isCorrect) {
@@ -56,11 +41,9 @@ class QuizController extends Controller
             Session::put('score', $currentScore + 1);
         }
 
-        // Increment question number
         $questionNumber = Session::get('questionNumber', 1);
         Session::put('questionNumber', $questionNumber + 1);
 
-        // Determine if it's the last question
         $isLastQuestion = $questionNumber >= 5;
 
         return view('feedback', [
@@ -72,6 +55,7 @@ class QuizController extends Controller
 
     private function createSessionToken()
     {
+        // Request a new session token from the API
         $response = Http::get('https://opentdb.com/api_token.php?command=request');
         $data = $response->json();
         return $data['token'] ?? null;
