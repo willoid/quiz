@@ -43,8 +43,7 @@ class QuizController extends Controller
     }
 
     public function submitAnswer(Request $request)
-    {
-        $selected = $request->input('selected_answer');
+    { $selected = $request->input('selected_answer');
         $correct = $request->input('correct_answer');
 
         $isCorrect = $selected === $correct;
@@ -54,9 +53,17 @@ class QuizController extends Controller
             Session::put('score', $currentScore + 1);
         }
 
+        // Increment question number
         $questionNumber = Session::get('questionNumber', 1);
         Session::put('questionNumber', $questionNumber + 1);
 
-        return redirect()->route('quiz');
+        // Determine if it's the last question
+        $isLastQuestion = $questionNumber >= 5;
+
+        return view('feedback', [
+            'isCorrect' => $isCorrect,
+            'correctAnswer' => $correct,
+            'isLastQuestion' => $isLastQuestion
+        ]);
     }
 }
